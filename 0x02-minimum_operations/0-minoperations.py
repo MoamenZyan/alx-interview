@@ -1,20 +1,17 @@
 #!/usr/bin/python3
-"""Minimum Operations"""
+"""My Script."""
 
 
-def minOperations(n: int) -> int:
-    """Description"""
-    n = 'H'
-    k = 'H'
-    ans = 0
-    while (len(k) < n):
-        if n % len(k) == 0:
-            ans += 2
-            n = k
-            k += k
-        else:
-            ans += 1
-            k += n
-    if len(k) != n:
+def minOperations(n):
+    """Description."""
+    if n < 2:
         return 0
-    return ans
+    myList = []
+    i = 1
+    while n != 1:
+        i += 1
+        if n % i == 0:
+            while n % i == 0:
+                n /= i
+                myList.append(i)
+    return sum(myList)
