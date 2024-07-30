@@ -5,20 +5,18 @@ import sys
 
 def solution(row, column):
     sol = [[]]
-    for queen in range(row):
-        sol = queen_place(queen, column, sol)
+    for q in range(row):
+        sol = place(q, column, sol)
+    return sol
 
+
+def place(q, column, prev_solver):
+    solver = []
+    for arr in prev_solver:
+        for x in range(column):
+            if safe(q, x, arr):
+                solver.append(arr + [x])
     return solver
-
-
-def queen_place(queen, column, pre_solve):
-    queen_solver = []
-    for arr in pre_solve:
-        for h in range(column):
-            if safe(queen, h, arr):
-                queen_solver.append(arr + [h])
-
-    return queen_solver
 
 
 def safe(queen, h, arr):
@@ -41,11 +39,11 @@ def init():
     if queen < 4:
         print("N must be at least 4")
         sys.exit(1)
-
     return(queen)
 
 
 def n_queens():
+
     queen = init()
     solver = solution(queen, queen)
     for arr in solver:
