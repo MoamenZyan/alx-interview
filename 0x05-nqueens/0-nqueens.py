@@ -1,65 +1,59 @@
 #!/usr/bin/python3
 
-"""
-N Queens solution
-"""
-
 import sys
 
 
-def backtracking(x, h, columns, position, negative, board):
-    """
-    Backtracking
-    """
-    if x == h:
-        res = []
-        for l in range(len(board)):
-            for k in range(len(board[l])):
-                if board[l][k] == 1:
-                    res.append([l, k])
-        print(res)
-        return
+def solution(row, column):
+    sol = [[]]
+    for queen in range(row):
+        sol = queen_place(queen, column, sol)
 
-    for c in range(n):
-        if c in columns or (x + c) in position or (x - c) in negative:
-            continue
-
-        columns.add(c)
-        position.add(x + c)
-        negative.add(x - c)
-        board[x][c] = 1
-
-        backtracking(x+1, h, columns, position, negative, board)
-
-        columns.remove(c)
-        position.remove(x + c)
-        negative.remove(x - c)
-        board[x][c] = 0
+    return solver
 
 
-def nqueens(n):
-    """
-    N Queens solution
-    """
-    columns = set()
-    pos = set()
-    neg = set()
-    board = [[0] * n for i in range(n)]
+def queen_place(queen, column, pre_solve):
+    queen_solver = []
+    for arr in pre_solve:
+        for h in range(column):
+            if safe(queen, h, arr):
+                queen_solver.append(arr + [h])
 
-    backtrack(0, n, columns, pos, neg, board)
+    return queen_solver
 
 
-if __name__ == "__main__":
-    num = sys.argv
-    if len(num) != 2:
+def safe(queen, h, arr):
+    if h in arr:
+        return (False)
+    else:
+        return all(abs(arr[column] - h) != queen - column
+                   for column in range(queen))
+
+
+def init():
+    if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
-    try:
-        nn = int(num[1])
-        if nn < 4:
-            print("N must be at least 4")
-            sys.exit(1)
-        nqueens(nn)
-    except ValueError:
+    if sys.argv[1].isdigit():
+        queen = int(sys.argv[1])
+    else:
         print("N must be a number")
         sys.exit(1)
+    if queen < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+
+    return(queen)
+
+
+def n_queens():
+    queen = init()
+    solver = solution(queen, queen)
+    for arr in solver:
+        clean = []
+        for q, x in enumerate(arr):
+            clean.append([q, x])
+        print(clean)
+
+
+if __name__ == '__main__':
+    n_queens()
