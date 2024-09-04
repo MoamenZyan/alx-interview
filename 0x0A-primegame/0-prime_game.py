@@ -1,57 +1,44 @@
 #!/usr/bin/python3
-"""My script"""
+"""Prime game module"""
 
 
 def isWinner(x, nums):
-    """Prime game"""
-    mariaCount = 0
-    benCount = 0
+    """Determine who is winner
+    """
 
-    for num in nums:
-        rounds = list(range(1, num + 1))
-        primes = primesInRange(1, num)
+    if x <= 0 or nums is None:
+        return None
 
-        if not primes:
-            benCount += 1
-            continue
+    if x != len(nums):
+        return None
 
-        mariaTurn = True
+    benCounts = 0
+    mariaCounts = 0
+    res = [1 for x in range(sorted(nums)[-1] + 1)]
 
-        while(True):
-            if not primes:
-                if mariaTurn:
-                    benCount += 1
-                else:
-                    mariaCount += 1
-                break
+    res[0], res[1] = 0, 0
 
-            smallPrime = primes.pop(0)
-            rounds.remove(smallPrime)
+    for i in range(2, len(res)):
+        removeMultiples(res, i)
 
-            rounds = [x for x in rounds if x % smallPrime != 0]
+    for i in nums:
+        if sum(res[0:i + 1]) % 2 == 0:
+            benCounts += 1
+        else:
+            mariaCounts += 1
+    if benCounts > mariaCounts:
+        return "Ben"
 
-            mariaTurn = not mariaTurn
-
-    if mariaCount > benCount:
-        return "Winner: Maria"
-
-    if mariaCount < benCount:
-        return "Winner: Ben"
+    if mariaCounts > benCounts:
+        return "Maria"
 
     return None
 
 
-def isPrime(num):
-    """Returns rue if num is prime."""
-    if num < 2:
-        return False
-    for i in range(2, int(num ** 0.5) + 1):
-        if num % i == 0:
-            return False
-    return True
-
-
-def primesInRange(start, end):
-    """Returns prime numbers."""
-    primeNumbers = [n for n in range(start, end+1) if isPrime(n)]
-    return primeNumbers
+def removeMultiples(nums, num):
+    """remove multiples"""
+    for i in range(2, len(nums)):
+        try:
+            nums[i * num] = 0
+        except (ValueError, IndexError):
+            break
